@@ -22,7 +22,7 @@ jobs:
           command: rspec
     # Only run this job when code is pushed to the main branch.
     # You can modify this to suit your needs.
-    when: branch == 'main'
+    
 
   # Define a job to deploy your app to Heroku.
   deploy:
@@ -37,9 +37,9 @@ jobs:
           app-name: events-attendees
     # Only run this job when code is pushed to the master branch and the RSpec tests pass.
     # You can modify this to suit your needs.
-    requires:
-      - rspec
-    when: branch == 'main'
+    # requires:
+    #   - rspec
+    
 
 workflows:
   version: 2
