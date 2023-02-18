@@ -7,15 +7,10 @@ orbs:
 workflows:
   heroku_deploy:
     jobs:
-      -build
+      - build
       - heroku/deploy-via-git:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
           post-steps:
-          - run: rails db:migrate
+            - run: rails db:migrate
 
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
