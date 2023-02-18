@@ -3,50 +3,41 @@ class V1::EventsController < ApplicationController
 
   def index
     events = Event.where_params_are(params).paginate(params)
-    render json: events, status: 200
+    render json: events, status: :ok
   end
 
   def show
-    render json: @event, status: 200
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {error: e.to_s }, status: :not_found
+    render json: @event, status: :ok
   end
 
   def create
     event = Event.new(event_params)
     if event.save
-      render status: 201, json: event
+      render status: :created, json: event
     else
-      render json: event.errors, status: :unprocessible_entity
+      render json: event.errors, status: :unprocessable_entity
     end
   end
 
   def update
-    if @event.udpate(event_params)
-      render status: 200, json: event
+    if @event.update(event_params)
+      render status: :ok, json: @event
     else
-      render json: event.errors, status: :unprocessible_entity
+      render json: @event.errors, status: :unprocessable_entity
     end
   end
 
   def destroy
-    if @event.nil?
-      render json: { message: "Event not found" }, status: :not_found
-    else
-      if event.destroy
-        render json: { message: "Event deleted" }
-      else
-        render json: { message: "Event could not be deleted" }, status: :unprocessible_entity
-      end
-    end
+    @event.destroy
+    head :no_content
   end
 
   def rsvp
-    attendee = event.attendees.new(params[:booking_params])
+    attendee = @event.attendees.new(params[:booking_params])
     if attendee.save
-      render status: 201, json: attendee
+      render status: :created, json: attendee
     else
-      render json: attendee.errors, status: :unprocessible_entity
+      render json: attendee.errors, status: :unprocessable_entity
     end
   end
 
@@ -54,6 +45,8 @@ class V1::EventsController < ApplicationController
 
   def get_event
     @event = Event.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {error: e.to_s }, status: :not_found
   end
 
   def event_params
