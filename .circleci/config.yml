@@ -5,7 +5,7 @@ version: 2.1
 orbs:
   # Use the official Heroku orb to deploy your app to Heroku.
   # See: https://circleci.com/developer/orbs/orb/heroku/heroku
-  heroku: heroku/heroku@0.2.5
+  heroku: circleci/heroku@2.0.0
 
 jobs:
   # Define a job to run your RSpec tests.
