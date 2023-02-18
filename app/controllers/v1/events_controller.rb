@@ -7,7 +7,7 @@ class V1::EventsController < ApplicationController
   end
 
   def show
-    render json: event, status: 200
+    render json: @event, status: 200
   rescue ActiveRecord::RecordNotFound => e
     render json: {error: e.to_s }, status: :not_found
   end
@@ -30,13 +30,14 @@ class V1::EventsController < ApplicationController
   end
 
   def destroy
-    if event.nil?
+    if @event.nil?
       render json: { message: "Event not found" }, status: :not_found
     else
       if event.destroy
         render json: { message: "Event deleted" }
       else
         render json: { message: "Event could not be deleted" }, status: :unprocessible_entity
+      end
     end
   end
 
@@ -52,7 +53,7 @@ class V1::EventsController < ApplicationController
   private
 
   def get_event
-    event = Event.find(params[:id])
+    @event = Event.find(params[:id])
   end
 
   def event_params
