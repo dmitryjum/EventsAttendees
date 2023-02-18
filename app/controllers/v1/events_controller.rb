@@ -41,6 +41,12 @@ class V1::EventsController < ApplicationController
   end
 
   def rsvp
+    attendee = event.attendees.new(params[:booking_params])
+    if attendee.save
+      render status: 201, json: attendee
+    else
+      render json: attendee.errors, status: :unprocessible_entity
+    end
   end
 
   private
