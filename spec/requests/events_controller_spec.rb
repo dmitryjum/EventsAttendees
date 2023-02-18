@@ -73,6 +73,11 @@ describe V1::EventsController do
       expect(json_response['id']).to eq @event1.id
     end
 
+    it "finds an event by friendly id" do
+      get v1_event_path(id: "event-one")
+      expect(json_response['id']).to eq @event1.id
+    end
+
     it "finds an event by id and the event json contains first page of attendee records that belong to this event" do
       10.times do
         @event1.attendees.create(name: FFaker::Name.name, email: FFaker::Internet.email)

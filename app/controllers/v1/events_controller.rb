@@ -8,7 +8,7 @@ class V1::EventsController < ApplicationController
   end
 
   def show
-     event = Event.includes(:attendees).find(params[:id])
+     event = Event.includes(:attendees).friendly.find(params[:id])
      attendees = event.attendees.paginate(params)
      event_json = event.as_json
      event_json["attendees"] = attendees.as_json
@@ -57,7 +57,7 @@ class V1::EventsController < ApplicationController
   private
 
   def get_event
-    @event = Event.find(params[:id])
+    @event = Event.friendly.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
     render json: {error: e.to_s }, status: :not_found
   end
