@@ -36,7 +36,7 @@ describe V1::EventsController do
       expect(json_response["records"].first["name"]).to eq "Event three"
     end
 
-    it "requests all events by start time and end time and receives paginated response", focus: true do
+    it "requests all events between the given start time and the end time and receives paginated response", focus: true do
       get v1_events_path(event: {start_time: "2022-03-16", end_time: "2022-03-24"}, per_page: 2)
       expect(json_response["entries_count"]).to be 2
       expect(json_response["records"].map{|s| s["name"]}).to eq [@event2.name, @event3.name]
@@ -89,7 +89,7 @@ describe V1::EventsController do
   end
 
   context "it creates a new event" do
-    it "succeeds creating a new event" do
+    it "successfuly creates a new event" do
       post v1_events_path(event: {name: "New Modern Event", description: "modern special secret event", event_type: "in_person"})
       expect(response.status).to be 201
       expect(Event.count).to be 4

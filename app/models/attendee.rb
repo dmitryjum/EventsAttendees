@@ -8,6 +8,7 @@ class Attendee < ApplicationRecord
 
   validates_presence_of :name
   validates_presence_of :email
+  validates_presence_of :event_id
   validates :email, uniqueness: { scope: :event_id }
   validates_format_of :email, with: /@/
   before_save :downcase_email
