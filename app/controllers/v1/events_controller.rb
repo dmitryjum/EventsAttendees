@@ -36,9 +36,9 @@ class V1::EventsController < ApplicationController
   def rsvp
     attendee = @event.attendees.find_by_email(attendee_params[:email])
     if attendee.nil?
-      attendee = @event.attendees.new(attendee_params.merge(rsvp_status: true))
+      attendee = @event.attendees.new(attendee_params.merge(rsvp_status: "yes"))
     else
-      attendee.attributes = {name: attendee_params[:name], rsvp_status: true}
+      attendee.attributes = {name: attendee_params[:name], rsvp_status: "yes"}
     end
 
     if attendee.save

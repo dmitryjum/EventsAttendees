@@ -39,6 +39,7 @@ describe V1::EventsController do
     it "requests all events by start time and end time and receives paginated response", focus: true do
       get v1_events_path(event: {start_time: "2022-03-16", end_time: "2022-03-24"}, per_page: 2)
       expect(json_response["entries_count"]).to be 2
+      expect(json_response["records"].map{|s| s["name"]}).to eq [@event2.name, @event3.name]
     end
 
     it "receives response as the object with 'records', 'entries_count', 'pages_per_limit', 'page' keys" do
@@ -120,7 +121,7 @@ describe V1::EventsController do
       post rsvp_v1_event_path(id: @event3.id, attendee: {name: "John", email: "john@email.com"})
       expect(response.status).to be 200
       expect(json_response["name"]).to eq "John"
-      expect(json_response["rsvp_status"]).to be true
+      expect(json_response["rsvp_status"]).to eq "yes"
     end
 
     it "successfuly creates an attendee record with rsvp true if it already exist" do
@@ -128,7 +129,7 @@ describe V1::EventsController do
       post rsvp_v1_event_path(id: @event1.id, attendee: {name: attendee.name, email: attendee.email})
       expect(response.status).to be 200
       expect(json_response["name"]).to eq attendee.name
-      expect(json_response["rsvp_status"]).to be true
+      expect(json_response["rsvp_status"]).to eq "yes"
     end
   end
 end

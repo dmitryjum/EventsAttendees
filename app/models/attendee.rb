@@ -1,4 +1,11 @@
 class Attendee < ApplicationRecord
+  include Paginatable
+
+  enum rsvp_status: {
+    no: 0,
+    yes: 1
+  }
+
   validates_presence_of :name
   validates_presence_of :email
   validates :email, uniqueness: { scope: :event_id }

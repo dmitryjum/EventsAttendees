@@ -17,7 +17,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_18_013813) do
   create_table "attendees", force: :cascade do |t|
     t.string "name"
     t.string "email"
-    t.boolean "rsvp_status", default: false, null: false
+    t.integer "rsvp_status", default: 0, null: false
     t.bigint "event_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
