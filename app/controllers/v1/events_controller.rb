@@ -1,5 +1,5 @@
 class V1::EventsController < ApplicationController
-  before_action :get_event, only: [:show, :update, :destroy, :rsvp]
+  before_action :get_event, only: [:update, :destroy, :rsvp]
 
   def index
     props = params[:event].present? ? event_params : {}
@@ -8,7 +8,13 @@ class V1::EventsController < ApplicationController
   end
 
   def show
-    render json: @event, status: :ok
+     @event = Event.includes(:attendees).find(params[:id])
+     @attendees = @event.attendees.paginate(params)
+     event_json = @event.as_json
+     event_json["attendees"] = @attendees.as_json
+     render json: event_json, status: :ok
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {error: e.to_s }, status: :not_found
   end
 
   def create
