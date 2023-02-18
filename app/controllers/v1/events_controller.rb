@@ -2,7 +2,8 @@ class V1::EventsController < ApplicationController
   before_action :get_event, only: [:show, :update, :destroy, :rsvp]
 
   def index
-    events = Event.where_params_are(params).paginate(params)
+    props = params[:event].present? ? event_params : {}
+    events = Event.where_params_are(props).paginate(params)
     render json: events, status: :ok
   end
 
@@ -33,9 +34,15 @@ class V1::EventsController < ApplicationController
   end
 
   def rsvp
-    attendee = @event.attendees.new(params[:booking_params])
+    attendee = @event.attendees.find_by_email(attendee_params[:email])
+    if attendee.nil?
+      attendee = @event.attendees.new(attendee_params.merge(rsvp_status: true))
+    else
+      attendee.attributes = {name: attendee_params[:name], rsvp_status: true}
+    end
+
     if attendee.save
-      render status: :created, json: attendee
+      render status: :ok, json: attendee
     else
       render json: attendee.errors, status: :unprocessable_entity
     end
@@ -51,6 +58,10 @@ class V1::EventsController < ApplicationController
 
   def event_params
     params.require(:event).permit(:name, :start_time, :end_time, :description, :type)
+  end
+
+  def attendee_params
+    params.require(:attendee).permit(:name, :email, :event_id)
   end
 
 end
