@@ -7,46 +7,55 @@ orbs:
   # See: https://circleci.com/developer/orbs/orb/heroku/heroku
   heroku: circleci/heroku@2.0.0
 
-jobs:
-  # Define a job to run your RSpec tests.
-  rspec:
-    docker:
-      - image: cimg/ruby:3.1.0
-    steps:
-      - checkout
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+    parallelism: 1 # run three instances of this job in parallel
+    docker: # run the steps with Docker
+      - image: circleci/ruby:2.6.3 # ...with this image as the primary container; this is where all `steps` will run
+        environment: # environment variables for primary container
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          PGHOST: 127.0.0.1
+          PGUSER: postgres
+          RAILS_ENV: test
+      - image: circleci/postgres:11 # database image
+        environment: # environment variables for database, it is kind of obvious but it is important that they match with your test config in database.yml
+          POSTGRES_DB: EventsAttendees_test
+    steps: # a collection of executable commands
+      - checkout # special step to check out source code to working directory
+      # Which version of bundler?
       - run:
-          name: Install dependencies
-          command: bundle install --jobs=4 --retry=3
+          name: Which bundler?
+          command: bundle -v
+      # Restore bundle cache
+      # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+      - restore_cache:
+          keys:
+            - EventsAttendees-bundle-v2-{{ checksum "Gemfile.lock" }}
+            - EventsAttendees-bundle-v2-
+      - run: # Install Ruby dependencies
+          name: Bundle Install
+          command: bundle check --path vendor/bundle || bundle install --deployment
+      # Store bundle cache for Ruby dependencies
+      - save_cache:
+          key: EventsAttendees-bundle-v2-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
       - run:
-          name: Run RSpec tests
-          command: rspec
-    # Only run this job when code is pushed to the main branch.
-    # You can modify this to suit your needs.
-    
-
-  # Define a job to deploy your app to Heroku.
-  deploy:
-    # Use the Heroku orb to deploy your app to Heroku.
-    # You'll need to configure the HEROKU_API_KEY environment variable in your CircleCI project settings.
-    # See: https://devcenter.heroku.com/articles/platform-api-quickstart
-    executor: heroku/default
-    steps:
-      - checkout
-      - heroku/install
-      - heroku/deploy:
-          app-name: events-attendees
-    # Only run this job when code is pushed to the master branch and the RSpec tests pass.
-    # You can modify this to suit your needs.
-    # requires:
-    #   - rspec
-    
-
-workflows:
-  version: 2
-  # Define a workflow that runs the RSpec tests and then deploys the app to Heroku.
-  test-and-deploy:
-    jobs:
-      - rspec
-      - deploy:
-          requires:
-            - rspec
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Database setup
+          command: bin/rails db:schema:load --trace
+      - run:
+          name: Run rspec in parallel
+          command: |
+            bundle exec rspec --profile 10 \
+                              --out test_results/rspec.xml \
+                              --format progress \
+                              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+      # Save test results for timing analysis
+      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: test_results
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for example deploy configs
