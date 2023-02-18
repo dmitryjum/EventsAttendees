@@ -9,5 +9,7 @@ Rails.application.routes.draw do
         post :rsvp
       end
     end
+
+    resources :attendees, only: [:show, :create, :update, :destroy]
   end
 end
