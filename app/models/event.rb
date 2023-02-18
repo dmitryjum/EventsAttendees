@@ -1,5 +1,7 @@
 class Event < ApplicationRecord
   include Paginatable
+  extend FriendlyId
+  friendly_id :name, use: :slugged
 
   enum event_type: {
     virtual: 0,

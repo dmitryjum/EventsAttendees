@@ -8,12 +8,17 @@ describe V1::AttendeesController do
       end_time: Time.zone.parse("2022-03-12") + 10.days,
       description: FFaker::Lorem.paragraph,
       event_type: "in_person"
-    @attendee1 = FactoryBot.create :attendee, rsvp_status: "yes", event_id: @event1.id
+    @attendee1 = FactoryBot.create :attendee, name: "John Doe", rsvp_status: "yes", event_id: @event1.id
   end
 
   context "it gets an attendee by id" do
     it "finds an attendee by id" do
       get v1_attendee_path(id: @attendee1.id)
+      expect(json_response['id']).to eq @attendee1.id
+    end
+
+    it "finds an attendee by friendly id" do
+      get v1_attendee_path(id: "john-doe")
       expect(json_response['id']).to eq @attendee1.id
     end
 

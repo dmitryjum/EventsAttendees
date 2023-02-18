@@ -1,5 +1,7 @@
 class Attendee < ApplicationRecord
   include Paginatable
+  extend FriendlyId
+  friendly_id :name, use: :slugged
 
   enum rsvp_status: {
     no: 0,
