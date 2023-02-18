@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_18_013813) do
     t.datetime "start_time"
     t.datetime "end_time"
     t.text "description"
-    t.string "type"
+    t.integer "event_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
