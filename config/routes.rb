@@ -3,4 +3,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+  namespace :v1 do
+    resources :events, only: [:index, :show, :create, :update, :destroy] do
+      member do
+        post :rsvp
+      end
+    end
+  end
 end

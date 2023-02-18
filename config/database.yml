@@ -7,7 +7,7 @@ development:
 
 test:
   adapter: postgresql
-  database: EventsAttendees
+  database: EventsAttendees_test
   pool: 5
   timeout: 5000
   host: localhost
