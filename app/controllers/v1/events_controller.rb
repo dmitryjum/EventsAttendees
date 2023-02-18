@@ -8,11 +8,13 @@ class V1::EventsController < ApplicationController
   end
 
   def show
-     event = Event.includes(:attendees).friendly.find(params[:id])
-     attendees = event.attendees.paginate(params)
-     event_json = event.as_json
-     event_json["attendees"] = attendees.as_json
-     render json: event_json, status: :ok
+    event = Rails.cache.fetch("event_#{params[:id]}", expires: 30.minutes) do
+      Event.includes(:attendees).friendly.find(params[:id])
+    end
+    attendees = event.attendees.paginate(params)
+    event_json = event.as_json
+    event_json["attendees"] = attendees.as_json
+    render json: event_json, status: :ok
   rescue ActiveRecord::RecordNotFound => e
     render json: {error: e.to_s }, status: :not_found
   end

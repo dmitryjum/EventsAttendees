@@ -15,6 +15,8 @@ class V1::AttendeesController < ApplicationController
     else
       render json: attendee.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {error: e.to_s }, status: :not_found
   end
 
   def update
