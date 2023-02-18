@@ -1,30 +1,52 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
-# See: https://circleci.com/docs/2.0/orb-intro/
 orbs:
-  ruby: circleci/ruby@1.4.0
+  # Use the official Heroku orb to deploy your app to Heroku.
+  # See: https://circleci.com/developer/orbs/orb/heroku/heroku
+  heroku: heroku/heroku@0.2.5
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  build:
+  # Define a job to run your RSpec tests.
+  rspec:
     docker:
       - image: cimg/ruby:3.1.0
-    executor: ruby/default
     steps:
       - checkout
       - run:
-          name: Which bundler?
-          command: bundle -v
-      - ruby/bundle-install
+          name: Install dependencies
+          command: bundle install --jobs=4 --retry=3
+      - run:
+          name: Run RSpec tests
+          command: rspec
+    # Only run this job when code is pushed to the main branch.
+    # You can modify this to suit your needs.
+    when: branch == 'main'
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  # Define a job to deploy your app to Heroku.
+  deploy:
+    # Use the Heroku orb to deploy your app to Heroku.
+    # You'll need to configure the HEROKU_API_KEY environment variable in your CircleCI project settings.
+    # See: https://devcenter.heroku.com/articles/platform-api-quickstart
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy:
+          app-name: events-attendees
+    # Only run this job when code is pushed to the master branch and the RSpec tests pass.
+    # You can modify this to suit your needs.
+    requires:
+      - rspec
+    when: branch == 'main'
+
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  version: 2
+  # Define a workflow that runs the RSpec tests and then deploys the app to Heroku.
+  test-and-deploy:
     jobs:
-      - build
+      - rspec
+      - deploy:
+          requires:
+            - rspec
