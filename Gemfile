@@ -7,7 +7,8 @@ ruby "3.2.1"
 gem "rails", "~> 7.0.4", ">= 7.0.4.2"
 
 # Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+# gem "sqlite3", "~> 1.4"
+gem 'pg'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
@@ -38,7 +39,13 @@ gem "bootsnap", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem 'pry-rails'
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem 'database_cleaner'
+  gem 'factory_bot_rails'
+  gem 'ffaker'
+  gem 'pry-remote'
+  gem 'rspec-rails'
 end
 
 group :development do
