@@ -26,6 +26,7 @@ class Event < ApplicationRecord
 
     events = where(other_params)
     if time_params["start_time"].present? && time_params["end_time"].present?
+      # looks up the events by the range between start time and end time given
       events.where("start_time >= ? AND end_time <= ?", time_params["start_time"], time_params["end_time"])
     else
       events.where(time_params)
