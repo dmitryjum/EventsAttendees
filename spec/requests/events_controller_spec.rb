@@ -24,19 +24,19 @@ describe V1::EventsController do
   end
 
   context "it gets a list of events" do
-    it "requests all events by start time and receives paginated response", focus: true do
+    it "requests all events by start time and receives paginated response" do
       get v1_events_path(event: {start_time: "2022-03-15"}, per_page: 2)
       expect(json_response["entries_count"]).to be 1
       expect(json_response["records"].first["name"]).to eq "Event one"
     end
 
-    it "requests all events by end time and receives paginated response", focus: true do
+    it "requests all events by end time and receives paginated response" do
       get v1_events_path(event: {end_time: "2022-03-24"}, per_page: 2)
       expect(json_response["entries_count"]).to be 1
       expect(json_response["records"].first["name"]).to eq "Event three"
     end
 
-    it "requests all events between the given start time and the end time and receives paginated response", focus: true do
+    it "requests all events between the given start time and the end time and receives paginated response" do
       get v1_events_path(event: {start_time: "2022-03-16", end_time: "2022-03-24"}, per_page: 2)
       expect(json_response["entries_count"]).to be 2
       expect(json_response["records"].map{|s| s["name"]}).to eq [@event2.name, @event3.name]

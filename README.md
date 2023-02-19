@@ -3,7 +3,7 @@
 Events can be queried by ID or "FriendlyId" slugged to an event name. When one event is requested, it returns as json with its own properties and with paginated list of related attendees.
 - Attendee resource on its own would likely be accessed by the admin user. The API allows to query Attendees table by ID or FriendlyId; create a new Attendee, but it's creation requires existing event and its association with an existing event. An admin can also delete and update an Attendee record, but there can't be more than one Attendee record with the same email that belongs to the same Event, although email property doesn't have to be unique on its own
 
-###API responds to these Events routes:###
+### API responds to these Events routes:
 1. `GET /v1/events` - It returns all events with no params, passed and the server responds with JSON that would look like:
  ```{"records"=>
   [{"id"=>1,
@@ -43,7 +43,7 @@ It's important to note, that "name" property is required and must be unique.
 6. A user can delete an existing event via this route `DELETE /v1/events/3`. There will be empty response body in return with 204 status code.
 7. One of the main features of this API is RSVP action. A user can RSVP to an event which will result in creation of a new Attendee record if it doesn't exist with its "rsvp_status" property set to "yes" (it's "no" by default). The appropriate route to RSVP is: `POST /v1/events/3/rsvp?attendee.email=john@email.com&attendee.name=John`. It's important to pass "name" and "email" propertie with RSVP POST request, as they are required to reate an Attendee record.
 
-###API responds to these Attendees routes:###
+### API responds to these Attendees routes:
 There is no Index route for Attendees, as the list of them can be requested per the Event that they belong to. But there are other utility routes available, if Attendees table needs to be manipulated separately.
 1. An attendee can be accessed by ID or Friendly ID via `GET /v1/attendees/1` and the example response would be:
 ```
