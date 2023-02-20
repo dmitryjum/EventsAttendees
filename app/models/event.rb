@@ -17,13 +17,13 @@ class Event < ApplicationRecord
     time_params = {}
     other_params = {}
     params.each do |k,v|
-      if k == "start_time" || k == "end_time"
+      if k.to_s == "start_time" || k.to_s == "end_time"
         time_params[k] = Time.zone.parse(v)
       else
         other_params[k] = v
       end
     end
-
+    binding.pry
     events = where(other_params)
     if time_params["start_time"].present? && time_params["end_time"].present?
       # looks up the events by the range between start time and end time given
