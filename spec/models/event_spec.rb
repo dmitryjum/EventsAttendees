@@ -30,7 +30,7 @@ RSpec.describe Event, type: :model do
 
     context "when start_time and end_time are provided" do
       it "returns events that fall within the time range" do
-        events = Event.where_params_are({event_type: :in_person, start_time: "2023-02-20 10:30:00", end_time: "2023-02-20 14:30:00"})
+        events = Event.where_params_are({event_type: :in_person, start_time: "2023-02-20 9:30:00", end_time: "2023-02-20 15:30:00"})
         expect(events).to match_array([event1, event3])
       end
     end
