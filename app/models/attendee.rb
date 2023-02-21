@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Attendee < ApplicationRecord
   include Paginatable
   extend FriendlyId
@@ -8,15 +10,15 @@ class Attendee < ApplicationRecord
     yes: 1
   }
 
-  validates_presence_of :name
-  validates_presence_of :email
-  validates_presence_of :event_id
+  validates :name, presence: true
+  validates :email, presence: true
+  validates :event_id, presence: true
   validates :email, uniqueness: { scope: :event_id }
-  validates_format_of :email, with: /@/
+  validates :email, format: { with: /@/ }
   before_save :downcase_email
   belongs_to :event
 
   def downcase_email
-    self.email = self.email.delete(' ').downcase
+    self.email = email.delete(" ").downcase
   end
 end
