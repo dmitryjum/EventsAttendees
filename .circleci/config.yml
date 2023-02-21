@@ -28,7 +28,6 @@ jobs: # a collection of steps
           RAILS_ENV: test
       - image: cimg/postgres:14.6 # database image
         environment: # environment variables for database
-          POSTGRES_USER: ""
           POSTGRES_DB: EventsAttendees_test
           POSTGRES_PASSWORD: ""
     steps: # a collection of executable commands
