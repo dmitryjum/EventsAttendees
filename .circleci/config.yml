@@ -6,6 +6,7 @@ workflows:
     jobs:
       - build
       - heroku/deploy-via-git: # Use the pre-configured job, deploy-via-git
+          app-name: $HEROKU_APP_NAME
           requires:
             - build # only run deploy-via-git job if the build job has completed
           filters:
@@ -68,6 +69,3 @@ jobs: # a collection of steps
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test_results
       # See https://circleci.com/docs/2.0/deployment-integrations/ for example deploy configs
-      - run:
-          name: Debugging step
-          command: echo "Heroku App Name $HEROKU_APP_NAME"
