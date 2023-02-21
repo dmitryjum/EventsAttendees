@@ -93,6 +93,10 @@ Install app gems `bundle install`
 `rails db:seed`
 ### Run tests
 `rspec`
+### Run Rubocop linter before committing code to follow a consistent styleguide
+`rubocop`
+### Run Brakeman - vulnerability linter to check your code for potential security vulnerabilites in your implementation
+`brakeman`
 ### Run the application
 You can start just the application by running `rails s`. It'll start on default port 3000.
 ### See available routes
