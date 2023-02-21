@@ -15,6 +15,10 @@ gem "puma", "~> 5.0"
 
 gem 'friendly_id', '~> 5.4.0'
 
+gem "rubocop"
+gem "rubocop-rails"
+gem "rubocop-rspec"
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
