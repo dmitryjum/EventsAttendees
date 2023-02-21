@@ -10,7 +10,9 @@ workflows:
             - build # only run deploy-via-git job if the build job has completed
           filters:
             branches:
-              only: main | circleci-project-setup # only run deploy-via-git job on master branch
+              only:
+                - main
+                - circleci-project-setup
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
     parallelism: 1 # run three instances of this job in parallel
