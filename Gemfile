@@ -17,10 +17,6 @@ gem "puma", "~> 5.0"
 
 gem "friendly_id", "~> 5.4.0"
 
-gem "rubocop"
-gem "rubocop-rails"
-gem "rubocop-rspec"
-
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
@@ -55,6 +51,9 @@ group :development, :test do
   gem "pry-remote"
   gem "rspec_junit_formatter"
   gem "rspec-rails"
+  gem "rubocop"
+  gem "rubocop-rails"
+  gem "rubocop-rspec"
 end
 
 group :development do
