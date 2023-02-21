@@ -16,7 +16,7 @@ workflows:
                 - circleci-project-setup
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
-    parallelism: 1 # run three instances of this job in parallel
+    parallelism: 4 # run three instances of this job in parallel
     docker: # run the steps with Docker
       - image: cimg/ruby:3.2.1 # ...with this image as the primary container; this is where all `steps` will run
         environment: # environment variables for primary container
